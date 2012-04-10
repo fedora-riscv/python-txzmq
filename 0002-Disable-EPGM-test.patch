@@ -1,0 +1,34 @@
+From 972f93804885061ea2ee3821ce1193bd7e5ad02b Mon Sep 17 00:00:00 2001
+From: Ralph Bean <rbean@redhat.com>
+Date: Mon, 9 Apr 2012 22:13:35 -0400
+Subject: [PATCH] Disable EPGM test
+
+---
+ txZMQ/test/test_pubsub.py |   11 -----------
+ 1 file changed, 11 deletions(-)
+
+diff --git a/txZMQ/test/test_pubsub.py b/txZMQ/test/test_pubsub.py
+index 32f9480..934a96d 100644
+--- a/txZMQ/test/test_pubsub.py
++++ b/txZMQ/test/test_pubsub.py
+@@ -43,17 +43,6 @@ class ZmqConnectionTestCase(unittest.TestCase):
+         return _wait(0.01).addCallback(
+                 lambda _: self.failUnlessEqual(getattr(r, 'messages', []), [['tag1', 'abcd'], ['tag2', 'efgh']], "Message should have been received"))
+ 
+-    def test_send_recv_pgm(self):
+-        r = ZmqTestSubConnection(self.factory, ZmqEndpoint(ZmqEndpointType.Bind, "epgm://127.0.0.1;239.192.1.1:5556"))
+-        s = ZmqPubConnection(self.factory, ZmqEndpoint(ZmqEndpointType.Connect, "epgm://127.0.0.1;239.192.1.1:5556"))
+-
+-        r.subscribe('tag')
+-        s.publish('xyz', 'different-tag')
+-        s.publish('abcd', 'tag1')
+-
+-        return _wait(0.2).addCallback(
+-                lambda _: self.failUnlessEqual(getattr(r, 'messages', []), [['tag1', 'abcd']], "Message should have been received"))
+-
+     def test_send_recv_multiple_endpoints(self):
+         r = ZmqTestSubConnection(self.factory, ZmqEndpoint(ZmqEndpointType.Bind, "tcp://127.0.0.1:5556"), ZmqEndpoint(ZmqEndpointType.Bind, "inproc://endpoint"))
+         s1 = ZmqPubConnection(self.factory, ZmqEndpoint(ZmqEndpointType.Connect, "tcp://127.0.0.1:5556"))
+-- 
+1.7.9.3
+

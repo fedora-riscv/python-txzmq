@@ -1,0 +1,26 @@
+From cb81e1395494607d4b1244fda21a7d0373118b70 Mon Sep 17 00:00:00 2001
+From: Ralph Bean <rbean@redhat.com>
+Date: Mon, 9 Apr 2012 21:11:13 -0400
+Subject: [PATCH 1/2] Corrected FSF address
+
+---
+ LICENSE.txt |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/LICENSE.txt b/LICENSE.txt
+index d60c31a..519310a 100644
+--- a/LICENSE.txt
++++ b/LICENSE.txt
+@@ -2,7 +2,8 @@
+ 		       Version 2, June 1991
+ 
+  Copyright (C) 1989, 1991 Free Software Foundation, Inc.
+-     59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
++ 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
++
+  Everyone is permitted to copy and distribute verbatim copies
+  of this license document, but changing it is not allowed.
+ 
+-- 
+1.7.9.3
+
