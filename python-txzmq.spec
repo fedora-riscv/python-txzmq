@@ -2,7 +2,7 @@
 
 Name:             python-txzmq
 Version:          0.5.0
-Release:          1%{?dist}
+Release:          2%{?dist}
 Summary:          Twisted bindings for ZeroMQ
 
 Group:            Development/Languages
@@ -31,6 +31,12 @@ Twisted event loop (reactor).
 %setup -q -n %{modname}-%{version}
 %patch0 -p1 -b .disable_epgm_test
 
+# Patch out the setuptools requirement on Twisted since epel doesn't ship
+# twisted egg-info
+%if %{?rhel}%{!?rhel:0} >= 6
+%{__sed} -i 's/"Twisted",//' setup.py
+%endif
+
 %build
 %{__python} setup.py build 
 
@@ -47,6 +53,9 @@ PYTHONPATH=$(pwd) nosetests
 %{python_sitelib}/* 
 
 %changelog
+* Tue May 29 2012 Ralph Bean <rbean@redhat.com> - 0.5.0-2
+- Patch out setuptools dep on Twisted for epel.
+
 * Mon May 21 2012 Ralph Bean <rbean@redhat.com> - 0.5.0-1
 - Removed FSF address patch.
 - Packaged new upstream version.
