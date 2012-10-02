@@ -9,7 +9,7 @@ Group:            Development/Languages
 License:          GPLv2
 URL:              http://pypi.python.org/pypi/%{modname}
 Source0:          http://pypi.python.org/packages/source/t/%{modname}/%{modname}-%{version}.tar.gz
-Patch0:           0001-Disable-epmg-test.patch
+Patch0:           0001-Disable-epgm-test.patch
 
 BuildArch:        noarch
 
