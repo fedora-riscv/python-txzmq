@@ -9,6 +9,7 @@ Group:            Development/Languages
 License:          GPLv2
 URL:              http://pypi.python.org/pypi/%{modname}
 Source0:          http://pypi.python.org/packages/source/t/%{modname}/%{modname}-%{version}.tar.gz
+Patch0:           0001-Disable-epmg-test.patch
 
 BuildArch:        noarch
 
@@ -28,6 +29,7 @@ Twisted event loop (reactor).
 
 %prep
 %setup -q -n %{modname}-%{version}
+%patch0 -p1 -b .disable_epgm_test
 
 # Patch out the setuptools requirement on Twisted since epel doesn't ship
 # twisted egg-info
@@ -53,7 +55,8 @@ PYTHONPATH=$(pwd) nosetests
 %changelog
 * Tue Oct 02 2012 Ralph Bean <rbean@redhat.com> - 0.5.2-1
 - Latest upstream with new socket types.
-- Remove epgm-disabling patch.
+- Remove old epgm-disabling patch.
+- Add new egpm-disabling patch.
 
 * Sat Jul 21 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.5.0-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
