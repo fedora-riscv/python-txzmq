@@ -1,8 +1,8 @@
 %global modname txZMQ
 
 Name:             python-txzmq
-Version:          0.5.0
-Release:          3%{?dist}
+Version:          0.5.2
+Release:          1%{?dist}
 Summary:          Twisted bindings for ZeroMQ
 
 Group:            Development/Languages
@@ -53,6 +53,9 @@ PYTHONPATH=$(pwd) nosetests
 %{python_sitelib}/* 
 
 %changelog
+* Tue Oct 02 2012 Ralph Bean <rbean@redhat.com> - 0.5.2-1
+- Latest upstream with new socket types.
+
 * Sat Jul 21 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.5.0-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 
