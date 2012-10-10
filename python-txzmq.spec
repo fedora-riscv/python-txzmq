@@ -2,7 +2,7 @@
 
 Name:             python-txzmq
 Version:          0.5.2
-Release:          2%{?dist}
+Release:          3%{?dist}
 Summary:          Twisted bindings for ZeroMQ
 
 Group:            Development/Languages
@@ -16,6 +16,7 @@ Patch1:           0002-Support-for-zeromq3.patch
 Patch2:           0003-Fixup-pubsub-tests-for-zeromq3.patch
 Patch3:           0004-Disable-tests-that-I-can-t-yet-get-passing-with-zero.patch
 Patch4:           0005-Completely-remove-broken-zeromq3-tests.patch
+Patch5:           0006-Support-older-pyzmq.patch
 
 
 BuildArch:        noarch
@@ -41,6 +42,7 @@ Twisted event loop (reactor).
 %patch2 -p1 -b .fix-pubsub-test
 %patch3 -p1 -b .disable-wonky-tests
 %patch4 -p1 -b .remove-busted-tests
+%patch5 -p1 -b .support-older-pyzmq
 
 # Patch out the setuptools requirement on Twisted since epel doesn't ship
 # twisted egg-info
@@ -64,7 +66,11 @@ PYTHONPATH=$(pwd) nosetests
 %{python_sitelib}/* 
 
 %changelog
-* Wed Oct 10 2012 Ralph Bean <rbean@redhat.com> - 0.5.2-1
+* Wed Oct 10 2012 Ralph Bean <rbean@redhat.com> - 0.5.2-3
+- Patch to support older pyzmq on f17 and el6.
+- Fix changelog.
+
+* Wed Oct 10 2012 Ralph Bean <rbean@redhat.com> - 0.5.2-2
 - Added three patches to support zeromq3.
 
 * Tue Oct 02 2012 Ralph Bean <rbean@redhat.com> - 0.5.2-1
