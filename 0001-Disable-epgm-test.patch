@@ -1,14 +1,14 @@
-From 5fd3b5ddf732056a2c4d25b1edb268c1981fbd1c Mon Sep 17 00:00:00 2001
+From 6857b66383bc634f3cf6f3fffa8da38e317ef478 Mon Sep 17 00:00:00 2001
 From: Ralph Bean <rbean@redhat.com>
-Date: Tue, 2 Oct 2012 13:40:37 -0400
-Subject: [PATCH] Disable epgm test.
+Date: Mon, 29 Oct 2012 10:36:33 -0400
+Subject: [PATCH] Disable epgm test
 
 ---
- txzmq/test/test_pubsub.py | 39 ---------------------------------------
- 1 file changed, 39 deletions(-)
+ txzmq/test/test_pubsub.py | 42 ------------------------------------------
+ 1 file changed, 42 deletions(-)
 
 diff --git a/txzmq/test/test_pubsub.py b/txzmq/test/test_pubsub.py
-index 6f98418..efa8415 100644
+index 04ef4f0..b118a59 100644
 --- a/txzmq/test/test_pubsub.py
 +++ b/txzmq/test/test_pubsub.py
 @@ -17,23 +17,6 @@ class ZmqTestSubConnection(ZmqSubConnection):
@@ -35,9 +35,9 @@ index 6f98418..efa8415 100644
  class ZmqConnectionTestCase(unittest.TestCase):
      """
      Test case for L{zmq.twisted.connection.Connection}.
-@@ -67,25 +50,6 @@ class ZmqConnectionTestCase(unittest.TestCase):
- 
-         return _wait(0.01).addCallback(check)
+@@ -79,28 +62,6 @@ class ZmqConnectionTestCase(unittest.TestCase):
+         return _wait(0.01).addCallback(publish) \
+             .addCallback(lambda _: _wait(0.01)).addCallback(check)
  
 -    def test_send_recv_pgm(self):
 -        r = ZmqTestSubConnection(self.factory, ZmqEndpoint(
@@ -47,8 +47,10 @@ index 6f98418..efa8415 100644
 -            ZmqEndpointType.connect, "epgm://127.0.0.1;239.192.1.1:5556"))
 -
 -        r.subscribe('tag')
--        s.publish('xyz', 'different-tag')
--        s.publish('abcd', 'tag1')
+-
+-        def publish(ignore):
+-            s.publish('xyz', 'different-tag')
+-            s.publish('abcd', 'tag1')
 -
 -        def check(ignore):
 -            result = getattr(r, 'messages', [])
@@ -56,18 +58,19 @@ index 6f98418..efa8415 100644
 -            self.failUnlessEqual(
 -                result, expected, "Message should have been received")
 -
--        return _wait(0.2).addCallback(check)
+-        return _wait(0.2).addCallback(publish) \
+-            .addCallback(lambda _: _wait(0.2)).addCallback(check)
 -
      def test_send_recv_multiple_endpoints(self):
          r = ZmqTestSubConnection(
              self.factory,
-@@ -110,6 +74,3 @@ class ZmqConnectionTestCase(unittest.TestCase):
-                 sorted(result), expected, "Message should have been received")
+@@ -128,6 +89,3 @@ class ZmqConnectionTestCase(unittest.TestCase):
  
-         return _wait(0.2).addCallback(check)
+         return _wait(0.1).addCallback(publish) \
+             .addCallback(lambda _: _wait(0.1)).addCallback(check)
 -
 -    if not _detect_epgm():
 -        test_send_recv_pgm.skip = "epgm:// not available"
 -- 
-1.7.11.7
+1.7.12.1
 

@@ -1,8 +1,8 @@
 %global modname txZMQ
 
 Name:             python-txzmq
-Version:          0.5.2
-Release:          3%{?dist}
+Version:          0.6.1
+Release:          1%{?dist}
 Summary:          Twisted bindings for ZeroMQ
 
 Group:            Development/Languages
@@ -10,14 +10,6 @@ License:          GPLv2
 URL:              http://pypi.python.org/pypi/%{modname}
 Source0:          http://pypi.python.org/packages/source/t/%{modname}/%{modname}-%{version}.tar.gz
 Patch0:           0001-Disable-epgm-test.patch
-
-# Tracking upstream issue -> https://github.com/smira/txZMQ/pull/35
-Patch1:           0002-Support-for-zeromq3.patch
-Patch2:           0003-Fixup-pubsub-tests-for-zeromq3.patch
-Patch3:           0004-Disable-tests-that-I-can-t-yet-get-passing-with-zero.patch
-Patch4:           0005-Completely-remove-broken-zeromq3-tests.patch
-Patch5:           0006-Support-older-pyzmq.patch
-
 
 BuildArch:        noarch
 
@@ -37,12 +29,7 @@ Twisted event loop (reactor).
 
 %prep
 %setup -q -n %{modname}-%{version}
-#%patch0 -p1 -b .disable_epgm_test
-%patch1 -p1 -b .support-zeromq3
-%patch2 -p1 -b .fix-pubsub-test
-%patch3 -p1 -b .disable-wonky-tests
-%patch4 -p1 -b .remove-busted-tests
-%patch5 -p1 -b .support-older-pyzmq
+%patch0 -p1 -b .disable_epgm_test
 
 # Patch out the setuptools requirement on Twisted since epel doesn't ship
 # twisted egg-info
@@ -66,6 +53,9 @@ PYTHONPATH=$(pwd) nosetests
 %{python_sitelib}/* 
 
 %changelog
+* Mon Oct 29 2012 Ralph Bean <rbean@redhat.com> - 0.6.1-1
+- Upstream integrates zeromq3 support.  Dropping patches.
+
 * Wed Oct 10 2012 Ralph Bean <rbean@redhat.com> - 0.5.2-3
 - Patch to support older pyzmq on f17 and el6.
 - Fix changelog.
