@@ -2,7 +2,7 @@
 
 Name:             python-txzmq
 Version:          0.6.1
-Release:          1%{?dist}
+Release:          2%{?dist}
 Summary:          Twisted bindings for ZeroMQ
 
 Group:            Development/Languages
@@ -10,6 +10,7 @@ License:          GPLv2
 URL:              http://pypi.python.org/pypi/%{modname}
 Source0:          http://pypi.python.org/packages/source/t/%{modname}/%{modname}-%{version}.tar.gz
 Patch0:           0001-Disable-epgm-test.patch
+Patch0:           0002-Support-older-pyzmq.patch
 
 BuildArch:        noarch
 
@@ -30,6 +31,7 @@ Twisted event loop (reactor).
 %prep
 %setup -q -n %{modname}-%{version}
 %patch0 -p1 -b .disable_epgm_test
+%patch1 -p1 -b .disable-older-pyzmq
 
 # Patch out the setuptools requirement on Twisted since epel doesn't ship
 # twisted egg-info
@@ -53,6 +55,9 @@ PYTHONPATH=$(pwd) nosetests
 %{python_sitelib}/* 
 
 %changelog
+* Mon Oct 29 2012 Ralph Bean <rbean@redhat.com> - 0.6.1-2
+- Patch (again) to support older pyzmq on f17 and el6.
+
 * Mon Oct 29 2012 Ralph Bean <rbean@redhat.com> - 0.6.1-1
 - Upstream integrates zeromq3 support.  Dropping patches.
 
