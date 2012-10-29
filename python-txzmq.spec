@@ -10,7 +10,7 @@ License:          GPLv2
 URL:              http://pypi.python.org/pypi/%{modname}
 Source0:          http://pypi.python.org/packages/source/t/%{modname}/%{modname}-%{version}.tar.gz
 Patch0:           0001-Disable-epgm-test.patch
-Patch0:           0002-Support-older-pyzmq.patch
+Patch1:           0002-Support-older-pyzmq.patch
 
 BuildArch:        noarch
 
