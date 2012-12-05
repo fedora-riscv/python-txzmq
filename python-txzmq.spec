@@ -2,7 +2,7 @@
 
 Name:             python-txzmq
 Version:          0.6.1
-Release:          2%{?dist}
+Release:          3%{?dist}
 Summary:          Twisted bindings for ZeroMQ
 
 Group:            Development/Languages
@@ -11,6 +11,8 @@ URL:              http://pypi.python.org/pypi/%{modname}
 Source0:          http://pypi.python.org/packages/source/t/%{modname}/%{modname}-%{version}.tar.gz
 Patch0:           0001-Disable-epgm-test.patch
 Patch1:           0002-Support-older-pyzmq.patch
+# Upstream - https://github.com/smira/txZMQ/pull/38
+Patch2:           0003-Allow-the-user-to-set-TCP-keepalive-options.patch
 
 BuildArch:        noarch
 
@@ -32,10 +34,11 @@ Twisted event loop (reactor).
 %setup -q -n %{modname}-%{version}
 %patch0 -p1 -b .disable_epgm_test
 %patch1 -p1 -b .disable-older-pyzmq
+%patch2 -p1 -b .allow-tcp-keepalive
 
 # Patch out the setuptools requirement on Twisted since epel doesn't ship
 # twisted egg-info
-%if %{?rhel}%{!?rhel:0} >= 6
+%if 0%{?rhel}
 %{__sed} -i 's/"Twisted",//' setup.py
 %endif
 
@@ -55,6 +58,10 @@ PYTHONPATH=$(pwd) nosetests
 %{python_sitelib}/* 
 
 %changelog
+* Wed Dec 05 2012 Ralph Bean <rbean@redhat.com> - 0.6.1-3
+- Patch to add support for tcp keepalives with zeromq3.
+- Fixed "bad" rhel conditional.
+
 * Mon Oct 29 2012 Ralph Bean <rbean@redhat.com> - 0.6.1-2
 - Patch (again) to support older pyzmq on f17 and el6.
 
