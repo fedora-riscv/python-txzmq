@@ -2,7 +2,7 @@
 
 Name:             python-txzmq
 Version:          0.6.1
-Release:          3%{?dist}
+Release:          4%{?dist}
 Summary:          Twisted bindings for ZeroMQ
 
 Group:            Development/Languages
@@ -58,6 +58,9 @@ PYTHONPATH=$(pwd) nosetests
 %{python_sitelib}/* 
 
 %changelog
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.6.1-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
 * Wed Dec 05 2012 Ralph Bean <rbean@redhat.com> - 0.6.1-3
 - Patch to add support for tcp keepalives with zeromq3.
 - Fixed "bad" rhel conditional.
