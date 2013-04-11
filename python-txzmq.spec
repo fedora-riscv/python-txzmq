@@ -1,8 +1,8 @@
 %global modname txZMQ
 
 Name:             python-txzmq
-Version:          0.6.1
-Release:          5%{?dist}
+Version:          0.6.2
+Release:          1%{?dist}
 Summary:          Twisted bindings for ZeroMQ
 
 Group:            Development/Languages
@@ -11,15 +11,6 @@ URL:              http://pypi.python.org/pypi/%{modname}
 Source0:          http://pypi.python.org/packages/source/t/%{modname}/%{modname}-%{version}.tar.gz
 Patch0:           0001-Disable-epgm-test.patch
 Patch1:           0002-Support-older-pyzmq.patch
-# Upstream - https://github.com/smira/txZMQ/pull/38
-Patch2:           0003-Allow-the-user-to-set-TCP-keepalive-options.patch
-# Upstream - https://github.com/smira/txZMQ/pull/40
-Patch3:           0004-replaced-calls-to-setsockopt-getsockopt-with-set-get.patch
-# Upstream - https://github.com/aelse/txZMQ/pull/1
-Patch4:           0005-Double-compat-checking-ridiculous.patch
-# Upstream - https://github.com/aelse/txZMQ/pull/1
-Patch5:           0006-Compatibility-with-both-old-and-new-pyzmq-13.0.0-and.patch
-
 
 BuildArch:        noarch
 
@@ -40,10 +31,6 @@ Twisted event loop (reactor).
 %setup -q -n %{modname}-%{version}
 %patch0 -p1 -b .disable_epgm_test
 %patch1 -p1 -b .disable-older-pyzmq
-%patch2 -p1 -b .allow-tcp-keepalive
-%patch3 -p1 -b .replace-socket-calls
-%patch4 -p1 -b .double-compat-check
-%patch5 -p1 -b .old-and-new-compat
 
 # Patch out the setuptools requirement on Twisted since epel doesn't ship
 # twisted egg-info
@@ -66,6 +53,10 @@ PYTHONPATH=$(pwd) nosetests
 %{python_sitelib}/txZMQ-%{version}*.egg-info
 
 %changelog
+* Thu Apr 11 2013 Ralph Bean <rbean@redhat.com> - 0.6.2-1
+- Latest upstream including our patches.
+- Removed patches 2 through 5 for pyzmq compat.
+
 * Wed Mar 27 2013 Ralph Bean <rbean@redhat.com> - 0.6.1-5
 - Added three patches to support old and new pyzmq.
 - More explicit file ownership in %%{python_sitelib}.
