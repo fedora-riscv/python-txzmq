@@ -2,7 +2,7 @@
 
 Name:             python-txzmq
 Version:          0.6.2
-Release:          1%{?dist}
+Release:          2%{?dist}
 Summary:          Twisted bindings for ZeroMQ
 
 Group:            Development/Languages
@@ -53,6 +53,9 @@ PYTHONPATH=$(pwd) nosetests
 %{python_sitelib}/txZMQ-%{version}*.egg-info
 
 %changelog
+* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.6.2-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
 * Thu Apr 11 2013 Ralph Bean <rbean@redhat.com> - 0.6.2-1
 - Latest upstream including our patches.
 - Removed patches 2 through 5 for pyzmq compat.
