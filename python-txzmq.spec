@@ -2,7 +2,7 @@
 
 Name:             python-txzmq
 Version:          0.6.2
-Release:          2%{?dist}
+Release:          3%{?dist}
 Summary:          Twisted bindings for ZeroMQ
 
 Group:            Development/Languages
@@ -18,10 +18,10 @@ BuildRequires:    python2-devel
 BuildRequires:    python-setuptools
 BuildRequires:    python-nose
 BuildRequires:    python-zmq
-BuildRequires:    python-twisted
+BuildRequires:    python-twisted-core
 
 Requires:         python-zmq
-Requires:         python-twisted
+Requires:         python-twisted-core
 
 %description
 txZMQ allows to integrate easily `ZeroMQ <http://zeromq.org>`_ sockets into
@@ -53,6 +53,9 @@ PYTHONPATH=$(pwd) nosetests
 %{python_sitelib}/txZMQ-%{version}*.egg-info
 
 %changelog
+* Tue Jan 14 2014 Ralph Bean <rbean@redhat.com> - 0.6.2-3
+- Narrow dep down to the twisted-core subpackage.
+
 * Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.6.2-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 
