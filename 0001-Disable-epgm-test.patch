@@ -1,17 +1,17 @@
-From d26b799ace81fcdc00589d9242e3a84aa05452a4 Mon Sep 17 00:00:00 2001
+From b9cc1b4832f4ebdc644a5aa2cf02e4ac40c56451 Mon Sep 17 00:00:00 2001
 From: Ralph Bean <rbean@redhat.com>
-Date: Thu, 11 Apr 2013 01:01:57 -0400
-Subject: [PATCH 1/2] Disable epgm test
+Date: Tue, 28 Jan 2014 16:18:17 -0500
+Subject: [PATCH] Disable epgm test
 
 ---
- txzmq/test/test_pubsub.py | 42 ------------------------------------------
- 1 file changed, 42 deletions(-)
+ txzmq/test/test_pubsub.py | 26 --------------------------
+ 1 file changed, 26 deletions(-)
 
 diff --git a/txzmq/test/test_pubsub.py b/txzmq/test/test_pubsub.py
-index 2010c01..df4f797 100644
+index 86a0238..f2fb12e 100644
 --- a/txzmq/test/test_pubsub.py
 +++ b/txzmq/test/test_pubsub.py
-@@ -23,23 +23,6 @@ class ZmqTestSubConnection(ZmqSubConnection):
+@@ -19,21 +19,6 @@ class ZmqTestSubConnection(ZmqSubConnection):
          self.messages.append([tag, message])
  
  
@@ -22,7 +22,7 @@ index 2010c01..df4f797 100644
 -    import zmq
 -
 -    context = zmq.Context()
--    socket = zmq.Socket(context, zmq.core.constants.PUB)
+-    socket = zmq.Socket(context, zmq.constants.PUB)
 -
 -    try:
 -        socket.bind("epgm://127.0.0.1;239.192.1.1:5557")
@@ -30,12 +30,10 @@ index 2010c01..df4f797 100644
 -        return True
 -    except ZMQError:
 -        return False
--
--
+ 
+ 
  class ZmqConnectionTestCase(unittest.TestCase):
-     """
-     Test case for L{zmq.twisted.connection.Connection}.
-@@ -85,28 +68,6 @@ class ZmqConnectionTestCase(unittest.TestCase):
+@@ -81,14 +66,6 @@ class ZmqConnectionTestCase(unittest.TestCase):
          return _wait(0.01).addCallback(publish) \
              .addCallback(lambda _: _wait(0.01)).addCallback(check)
  
@@ -47,24 +45,10 @@ index 2010c01..df4f797 100644
 -            ZmqEndpointType.connect, "epgm://127.0.0.1;239.192.1.1:5556"))
 -
 -        r.subscribe('tag')
--
--        def publish(ignore):
--            s.publish('xyz', 'different-tag')
--            s.publish('abcd', 'tag1')
--
--        def check(ignore):
--            result = getattr(r, 'messages', [])
--            expected = [['tag1', 'abcd']]
--            self.failUnlessEqual(
--                result, expected, "Message should have been received")
--
--        return _wait(0.2).addCallback(publish) \
--            .addCallback(lambda _: _wait(0.2)).addCallback(check)
--
-     def test_send_recv_multiple_endpoints(self):
-         r = ZmqTestSubConnection(
-             self.factory,
-@@ -134,6 +95,3 @@ class ZmqConnectionTestCase(unittest.TestCase):
+ 
+         def publish(ignore):
+             s.publish('xyz', 'different-tag')
+@@ -130,6 +107,3 @@ class ZmqConnectionTestCase(unittest.TestCase):
  
          return _wait(0.1).addCallback(publish) \
              .addCallback(lambda _: _wait(0.1)).addCallback(check)
@@ -72,5 +56,5 @@ index 2010c01..df4f797 100644
 -    if not _detect_epgm():
 -        test_send_recv_pgm.skip = "epgm:// not available"
 -- 
-1.8.1.4
+1.8.5.3
 
