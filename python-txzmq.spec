@@ -1,20 +1,8 @@
-%if 0%{?fedora}
-# Well, damnit.  I did the work to port this to python3, but we don't have
-# python3-twisted-core in Fedora yet.  Disabling this for now.
-%global with_python3 0
-%endif
-
-%if 0%{?rhel} && 0%{?rhel} <= 6
-%{!?__python2:        %global __python2 /usr/bin/python2}
-%{!?python2_sitelib:  %global python2_sitelib %(%{__python2} -c "from distutils.sysconfig import get_python_lib; print(get_python_lib())")}
-%{!?python2_sitearch: %global python2_sitearch %(%{__python2} -c "from distutils.sysconfig import get_python_lib; print(get_python_lib(1))")}
-%endif
-
 %global modname txZMQ
 
 Name:             python-txzmq
-Version:          0.7.3
-Release:          1%{?dist}
+Version:          0.6.2
+Release:          3%{?dist}
 Summary:          Twisted bindings for ZeroMQ
 
 Group:            Development/Languages
@@ -22,51 +10,27 @@ License:          GPLv2
 URL:              http://pypi.python.org/pypi/%{modname}
 Source0:          http://pypi.python.org/packages/source/t/%{modname}/%{modname}-%{version}.tar.gz
 Patch0:           0001-Disable-epgm-test.patch
+Patch1:           0002-Support-older-pyzmq.patch
 
 BuildArch:        noarch
 
 BuildRequires:    python2-devel
 BuildRequires:    python-setuptools
 BuildRequires:    python-nose
-BuildRequires:    python-zmq >= 13.0.0
+BuildRequires:    python-zmq
 BuildRequires:    python-twisted-core
-BuildRequires:    python-six
 
-Requires:         python-zmq >= 13.0.0
+Requires:         python-zmq
 Requires:         python-twisted-core
-Requires:         python-six
-
-%if 0%{?with_python3}
-BuildRequires:    python3-devel
-BuildRequires:    python3-setuptools
-BuildRequires:    python3-nose
-BuildRequires:    python3-zmq >= 13.0.0
-BuildRequires:    python3-twisted-core
-BuildRequires:    python3-six
-%endif
 
 %description
-txZMQ allows to integrate easily ZeroMQ sockets into Twisted event loop
-(reactor).
-
-%if 0%{?with_python3}
-%package -n python3-txzmq
-Summary:          Twisted bindings for ZeroMQ
-Group:            Development/Languages
-
-Requires:         python3-zmq >= 13.0.0
-Requires:         python3-twisted-core
-Requires:         python3-six
-
-%description -n python3-txzmq
-txZMQ allows to integrate easily ZeroMQ sockets into Twisted event loop
-(reactor).
-%endif
-
+txZMQ allows to integrate easily `ZeroMQ <http://zeromq.org>`_ sockets into
+Twisted event loop (reactor).
 
 %prep
 %setup -q -n %{modname}-%{version}
 %patch0 -p1 -b .disable_epgm_test
+%patch1 -p1 -b .disable-older-pyzmq
 
 # Patch out the setuptools requirement on Twisted since epel doesn't ship
 # twisted egg-info
@@ -74,64 +38,21 @@ txZMQ allows to integrate easily ZeroMQ sockets into Twisted event loop
 %{__sed} -i 's/"Twisted",//' setup.py
 %endif
 
-%if 0%{?with_python3}
-rm -rf %{py3dir}
-cp -a . %{py3dir}
-%endif
-
 %build
-%{__python2} setup.py build
-
-%if 0%{?with_python3}
-pushd %{py3dir}
-%{__python3} setup.py build
-popd
-%endif
+%{__python} setup.py build
 
 %check
 PYTHONPATH=$(pwd) nosetests
 
-%if 0%{?with_python3}
-pushd %{py3dir}
-PYTHONPATH=$(pwd) nosetests-%{python3_version}
-popd
-%endif
-
 %install
-%{__python2} setup.py install -O1 --skip-build --root $RPM_BUILD_ROOT
-
-%if 0%{?with_python3}
-pushd %{py3dir}
-%{__python3} setup.py install -O1 --skip-build --root $RPM_BUILD_ROOT
-popd
-%endif
+%{__python} setup.py install -O1 --skip-build --root $RPM_BUILD_ROOT
 
 %files
 %doc README.rst LICENSE.txt
-%{python2_sitelib}/txzmq/
-%{python2_sitelib}/txZMQ-%{version}*.egg-info
-
-%if 0%{?with_python3}
-%files -n python3-txzmq
-%doc README.rst LICENSE.txt
-%{python3_sitelib}/txzmq/
-%{python3_sitelib}/txZMQ-%{version}*.egg-info
-%endif
+%{python_sitelib}/txzmq/
+%{python_sitelib}/txZMQ-%{version}*.egg-info
 
 %changelog
-* Wed Aug 20 2014 Ralph Bean <rbean@redhat.com> - 0.7.3-1
-- Latest upstream with support for zmq reconnect options.
-
-* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.7.2-2
-- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
-
-* Sat Apr 19 2014 Ralph Bean <rbean@redhat.com> - 0.7.2-1
-- Latest upstream with python3 support -- woot, woot!
-
-* Tue Jan 28 2014 Ralph Bean <rbean@redhat.com> - 0.7.0-1
-- Latest upstream.
-- Dropped support for older pyzmq.
-
 * Tue Jan 14 2014 Ralph Bean <rbean@redhat.com> - 0.6.2-3
 - Narrow dep down to the twisted-core subpackage.
 

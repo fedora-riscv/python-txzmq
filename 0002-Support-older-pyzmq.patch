@@ -1,0 +1,25 @@
+From acef71366d932797a50ee787ef8463f0ca385315 Mon Sep 17 00:00:00 2001
+From: Ralph Bean <rbean@redhat.com>
+Date: Thu, 11 Apr 2013 01:02:53 -0400
+Subject: [PATCH 2/2] Support older pyzmq.
+
+---
+ txzmq/connection.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/txzmq/connection.py b/txzmq/connection.py
+index 11039fb..75c44a3 100644
+--- a/txzmq/connection.py
++++ b/txzmq/connection.py
+@@ -18,7 +18,7 @@ PYZMQ13 = False
+ try:
+     from zmq.core import version
+ 
+-    ZMQ3 = version.zmq_version_info()[0] >= 3
++    ZMQ3 = int(version.zmq_version().split('.')[0]) >= 3
+ except ImportError:
+     try:
+         # In pyzmq-13.0.0, this moved again.
+-- 
+1.8.1.4
+
