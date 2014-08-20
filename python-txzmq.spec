@@ -13,8 +13,8 @@
 %global modname txZMQ
 
 Name:             python-txzmq
-Version:          0.7.2
-Release:          2%{?dist}
+Version:          0.7.3
+Release:          1%{?dist}
 Summary:          Twisted bindings for ZeroMQ
 
 Group:            Development/Languages
@@ -119,6 +119,9 @@ popd
 %endif
 
 %changelog
+* Wed Aug 20 2014 Ralph Bean <rbean@redhat.com> - 0.7.3-1
+- Latest upstream with support for zmq reconnect options.
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.7.2-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 
