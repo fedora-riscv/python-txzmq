@@ -2,7 +2,7 @@
 
 Name:             python-txzmq
 Version:          0.6.2
-Release:          3%{?dist}
+Release:          4%{?dist}
 Summary:          Twisted bindings for ZeroMQ
 
 Group:            Development/Languages
@@ -10,17 +10,17 @@ License:          GPLv2
 URL:              http://pypi.python.org/pypi/%{modname}
 Source0:          http://pypi.python.org/packages/source/t/%{modname}/%{modname}-%{version}.tar.gz
 Patch0:           0001-Disable-epgm-test.patch
-Patch1:           0002-Support-older-pyzmq.patch
+Patch1:           0002-Use-modern-pyzmq-API.patch
 
 BuildArch:        noarch
 
 BuildRequires:    python2-devel
 BuildRequires:    python-setuptools
 BuildRequires:    python-nose
-BuildRequires:    python-zmq
+BuildRequires:    python-zmq >= 14.0
 BuildRequires:    python-twisted-core
 
-Requires:         python-zmq
+Requires:         python-zmq >= 14.0
 Requires:         python-twisted-core
 
 %description
@@ -30,7 +30,7 @@ Twisted event loop (reactor).
 %prep
 %setup -q -n %{modname}-%{version}
 %patch0 -p1 -b .disable_epgm_test
-%patch1 -p1 -b .disable-older-pyzmq
+%patch1 -p1 -b .modern-pyzmq
 
 # Patch out the setuptools requirement on Twisted since epel doesn't ship
 # twisted egg-info
@@ -53,6 +53,9 @@ PYTHONPATH=$(pwd) nosetests
 %{python_sitelib}/txZMQ-%{version}*.egg-info
 
 %changelog
+* Wed Oct 01 2014 Ralph Bean <rbean@redhat.com> - 0.6.2-4
+- Patch to use modern python-zmq.
+
 * Tue Jan 14 2014 Ralph Bean <rbean@redhat.com> - 0.6.2-3
 - Narrow dep down to the twisted-core subpackage.
 

@@ -1,0 +1,177 @@
+From 1c7542b3b1d3781ed59dea0ba44d77cd76947571 Mon Sep 17 00:00:00 2001
+From: Ralph Bean <rbean@redhat.com>
+Date: Wed, 1 Oct 2014 10:40:54 -0400
+Subject: [PATCH 2/2] Use modern pyzmq API.
+
+---
+ txzmq/connection.py           | 38 ++++++--------------------------------
+ txzmq/factory.py              |  2 +-
+ txzmq/pubsub.py               |  2 +-
+ txzmq/pushpull.py             |  2 +-
+ txzmq/req_rep.py              |  2 +-
+ txzmq/router_dealer.py        |  2 +-
+ txzmq/test/test_connection.py |  2 +-
+ txzmq/test/test_pubsub.py     |  6 +-----
+ 8 files changed, 13 insertions(+), 43 deletions(-)
+
+diff --git a/txzmq/connection.py b/txzmq/connection.py
+index 75c44a3..c9af2a0 100644
+--- a/txzmq/connection.py
++++ b/txzmq/connection.py
+@@ -3,8 +3,8 @@ ZeroMQ connection.
+ """
+ from collections import deque, namedtuple
+ 
+-from zmq.core import constants, error
+-from zmq.core.socket import Socket
++from zmq import constants, error
++from zmq import Socket
+ 
+ from zope.interface import implements
+ 
+@@ -13,20 +13,8 @@ from twisted.internet.interfaces import IFileDescriptor, IReadDescriptor
+ from twisted.python import log
+ 
+ 
+-# PYZMQ13 stands for pyzmq-13.0.0
+-PYZMQ13 = False
+-try:
+-    from zmq.core import version
+-
+-    ZMQ3 = int(version.zmq_version().split('.')[0]) >= 3
+-except ImportError:
+-    try:
+-        # In pyzmq-13.0.0, this moved again.
+-        from zmq.core import zmq_version_info
+-        ZMQ3 = zmq_version_info()[0] >= 3
+-        PYZMQ13 = True
+-    except ImportError:
+-        ZMQ3 = False
++from zmq import zmq_version_info
++ZMQ3 = zmq_version_info()[0] >= 3
+ 
+ 
+ class ZmqEndpointType(object):
+@@ -291,22 +279,8 @@ class ZmqConnection(object):
+             else:
+                 assert False, "Unknown endpoint type %r" % endpoint
+ 
+-    # Compatibility shims
+-    def _socket_get_pyzmq2(self, constant):
+-        return self.socket.getsockopt(constant)
+-
+-    def _socket_get_pyzmq13(self, constant):
++    def socket_get(self, constant):
+         return self.socket.get(constant)
+ 
+-    def _socket_set_pyzmq2(self, constant, value):
+-        return self.socket.setsockopt(constant, value)
+-
+-    def _socket_set_pyzmq13(self, constant, value):
++    def socket_set(self, constant, value):
+         return self.socket.set(constant, value)
+-
+-    if PYZMQ13:
+-        socket_get = _socket_get_pyzmq13
+-        socket_set = _socket_set_pyzmq13
+-    else:
+-        socket_get = _socket_get_pyzmq2
+-        socket_set = _socket_set_pyzmq2
+diff --git a/txzmq/factory.py b/txzmq/factory.py
+index 53a9cef..64b99d7 100644
+--- a/txzmq/factory.py
++++ b/txzmq/factory.py
+@@ -1,7 +1,7 @@
+ """
+ ZeroMQ Twisted factory which is controlling ZeroMQ context.
+ """
+-from zmq.core.context import Context
++from zmq import Context
+ 
+ from twisted.internet import reactor
+ 
+diff --git a/txzmq/pubsub.py b/txzmq/pubsub.py
+index 154325b..2878f2c 100644
+--- a/txzmq/pubsub.py
++++ b/txzmq/pubsub.py
+@@ -1,7 +1,7 @@
+ """
+ ZeroMQ PUB-SUB wrappers.
+ """
+-from zmq.core import constants
++from zmq import constants
+ 
+ from txzmq.connection import ZmqConnection
+ 
+diff --git a/txzmq/pushpull.py b/txzmq/pushpull.py
+index 6414484..5e77ebf 100644
+--- a/txzmq/pushpull.py
++++ b/txzmq/pushpull.py
+@@ -1,7 +1,7 @@
+ """
+ ZeroMQ PUSH-PULL wrappers.
+ """
+-from zmq.core import constants
++from zmq import constants
+ 
+ from txzmq.connection import ZmqConnection
+ 
+diff --git a/txzmq/req_rep.py b/txzmq/req_rep.py
+index c528e91..304e5d0 100644
+--- a/txzmq/req_rep.py
++++ b/txzmq/req_rep.py
+@@ -4,7 +4,7 @@ ZeroMQ REQ-REP wrappers.
+ import uuid
+ import warnings
+ 
+-from zmq.core import constants
++from zmq import constants
+ 
+ from twisted.internet import defer
+ 
+diff --git a/txzmq/router_dealer.py b/txzmq/router_dealer.py
+index 501434c..b8fc1b4 100644
+--- a/txzmq/router_dealer.py
++++ b/txzmq/router_dealer.py
+@@ -1,7 +1,7 @@
+ """
+ ZeroMQ ROUTER and DEALER connection types.
+ """
+-from zmq.core import constants
++from zmq import constants
+ 
+ from txzmq.connection import ZmqConnection
+ 
+diff --git a/txzmq/test/test_connection.py b/txzmq/test/test_connection.py
+index dadfe39..963c603 100644
+--- a/txzmq/test/test_connection.py
++++ b/txzmq/test/test_connection.py
+@@ -1,7 +1,7 @@
+ """
+ Tests for L{txzmq.connection}.
+ """
+-from zmq.core import constants
++from zmq import constants
+ 
+ from zope.interface import verify as ziv
+ 
+diff --git a/txzmq/test/test_pubsub.py b/txzmq/test/test_pubsub.py
+index df4f797..57572df 100644
+--- a/txzmq/test/test_pubsub.py
++++ b/txzmq/test/test_pubsub.py
+@@ -8,11 +8,7 @@ from txzmq.factory import ZmqFactory
+ from txzmq.pubsub import ZmqPubConnection, ZmqSubConnection
+ from txzmq.test import _wait
+ 
+-
+-try:
+-    from zmq.core.error import ZMQError
+-except ImportError:
+-    from zmq.error import ZMQError
++from zmq.error import ZMQError
+ 
+ 
+ class ZmqTestSubConnection(ZmqSubConnection):
+-- 
+1.9.3
+
