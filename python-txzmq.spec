@@ -13,7 +13,7 @@
 %global modname txZMQ
 
 Name:             python-txzmq
-Version:          0.7.3
+Version:          0.7.4
 Release:          1%{?dist}
 Summary:          Twisted bindings for ZeroMQ
 
@@ -119,6 +119,9 @@ popd
 %endif
 
 %changelog
+* Tue Mar 24 2015 Ralph Bean <rbean@redhat.com> - 0.7.4-1
+- new version
+
 * Wed Aug 20 2014 Ralph Bean <rbean@redhat.com> - 0.7.3-1
 - Latest upstream with support for zmq reconnect options.
 
