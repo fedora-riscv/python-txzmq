@@ -14,7 +14,7 @@
 
 Name:             python-txzmq
 Version:          0.7.4
-Release:          1%{?dist}
+Release:          2%{?dist}
 Summary:          Twisted bindings for ZeroMQ
 
 Group:            Development/Languages
@@ -119,6 +119,9 @@ popd
 %endif
 
 %changelog
+* Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.7.4-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+
 * Tue Mar 24 2015 Ralph Bean <rbean@redhat.com> - 0.7.4-1
 - new version
 
