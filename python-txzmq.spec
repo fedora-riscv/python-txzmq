@@ -1,7 +1,5 @@
 %if 0%{?fedora}
-# Well, damnit.  I did the work to port this to python3, but we don't have
-# python3-twisted-core in Fedora yet.  Disabling this for now.
-%global with_python3 0
+%global with_python3 1
 %endif
 
 %if 0%{?rhel} && 0%{?rhel} <= 6
@@ -12,36 +10,37 @@
 
 %global modname txZMQ
 
+%global commit 772df6458ce59f04775eb5bd07920c0f3f913e5e
+
 Name:             python-txzmq
 Version:          0.7.4
-Release:          4%{?dist}
+Release:          5.git772df64%{?dist}
 Summary:          Twisted bindings for ZeroMQ
 
 Group:            Development/Languages
 License:          GPLv2
-URL:              http://pypi.python.org/pypi/%{modname}
-Source0:          http://pypi.python.org/packages/source/t/%{modname}/%{modname}-%{version}.tar.gz
-Patch0:           0001-Disable-epgm-test.patch
+URL:              https://github.com/smira/%{modname}
+Source0:          %{url}/archive/%{commit}.tar.gz
 
 BuildArch:        noarch
 
 BuildRequires:    python2-devel
-BuildRequires:    python-setuptools
-BuildRequires:    python-nose
-BuildRequires:    python-zmq >= 13.0.0
+BuildRequires:    python2-setuptools
+BuildRequires:    python2-nose
+BuildRequires:    python2-zmq >= 13.0.0
 BuildRequires:    python-twisted-core
-BuildRequires:    python-six
+BuildRequires:    python2-six
 
-Requires:         python-zmq >= 13.0.0
+Requires:         python2-zmq >= 13.0.0
 Requires:         python-twisted-core
-Requires:         python-six
+Requires:         python2-six
 
 %if 0%{?with_python3}
 BuildRequires:    python3-devel
 BuildRequires:    python3-setuptools
 BuildRequires:    python3-nose
 BuildRequires:    python3-zmq >= 13.0.0
-BuildRequires:    python3-twisted-core
+BuildRequires:    python3-twisted
 BuildRequires:    python3-six
 %endif
 
@@ -55,7 +54,7 @@ Summary:          Twisted bindings for ZeroMQ
 Group:            Development/Languages
 
 Requires:         python3-zmq >= 13.0.0
-Requires:         python3-twisted-core
+Requires:         python3-twisted
 Requires:         python3-six
 
 %description -n python3-txzmq
@@ -65,8 +64,7 @@ txZMQ allows to integrate easily ZeroMQ sockets into Twisted event loop
 
 
 %prep
-%setup -q -n %{modname}-%{version}
-%patch0 -p1 -b .disable_epgm_test
+%setup -q -n %{modname}-%{commit}
 
 # Patch out the setuptools requirement on Twisted since epel doesn't ship
 # twisted egg-info
@@ -80,12 +78,10 @@ cp -a . %{py3dir}
 %endif
 
 %build
-%{__python2} setup.py build
+%py2_build
 
 %if 0%{?with_python3}
-pushd %{py3dir}
-%{__python3} setup.py build
-popd
+%py3_build
 %endif
 
 %check
@@ -98,27 +94,31 @@ popd
 %endif
 
 %install
-%{__python2} setup.py install -O1 --skip-build --root $RPM_BUILD_ROOT
+%py2_install
 
 %if 0%{?with_python3}
-pushd %{py3dir}
-%{__python3} setup.py install -O1 --skip-build --root $RPM_BUILD_ROOT
-popd
+%py3_install
 %endif
 
 %files
-%doc README.rst LICENSE.txt
+%doc README.rst
+%license LICENSE.txt
 %{python2_sitelib}/txzmq/
 %{python2_sitelib}/txZMQ-%{version}*.egg-info
 
 %if 0%{?with_python3}
 %files -n python3-txzmq
-%doc README.rst LICENSE.txt
+%doc README.rst
+%license LICENSE.txt
 %{python3_sitelib}/txzmq/
 %{python3_sitelib}/txZMQ-%{version}*.egg-info
 %endif
 
 %changelog
+* Tue Jul 26 2016 Lumir Balhar <lbalhar@redhat.com> - 0.7.4-5.a
+- Enabled Py3 support
+- Changed source to the latest commit on GitHub
+
 * Tue Jul 19 2016 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.7.4-4
 - https://fedoraproject.org/wiki/Changes/Automatic_Provides_for_Python_RPM_Packages
 
