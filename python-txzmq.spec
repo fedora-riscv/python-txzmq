@@ -14,7 +14,7 @@
 
 Name:             python-txzmq
 Version:          0.7.4
-Release:          5.git772df64%{?dist}
+Release:          6.git772df64%{?dist}
 Summary:          Twisted bindings for ZeroMQ
 
 Group:            Development/Languages
@@ -115,6 +115,9 @@ popd
 %endif
 
 %changelog
+* Mon Dec 19 2016 Miro Hrončok <mhroncok@redhat.com> - 0.7.4-6.git772df64
+- Rebuild for Python 3.6
+
 * Tue Jul 26 2016 Lumir Balhar <lbalhar@redhat.com> - 0.7.4-5.git772df64
 - Enabled Py3 support
 - Changed source to the latest commit on GitHub
