@@ -10,17 +10,15 @@
 
 %global modname txZMQ
 
-%global commit 772df6458ce59f04775eb5bd07920c0f3f913e5e
-
 Name:             python-txzmq
-Version:          0.7.4
-Release:          7.git772df64%{?dist}
+Version:          0.8.0
+Release:          1%{?dist}
 Summary:          Twisted bindings for ZeroMQ
 
 Group:            Development/Languages
 License:          GPLv2
 URL:              https://github.com/smira/%{modname}
-Source0:          %{url}/archive/%{commit}.tar.gz
+Source0:          %{url}/archive/%{version}.tar.gz
 
 BuildArch:        noarch
 
@@ -64,7 +62,7 @@ txZMQ allows to integrate easily ZeroMQ sockets into Twisted event loop
 
 
 %prep
-%setup -q -n %{modname}-%{commit}
+%setup -q -n %{modname}-%{version}
 
 # Patch out the setuptools requirement on Twisted since epel doesn't ship
 # twisted egg-info
@@ -115,6 +113,9 @@ popd
 %endif
 
 %changelog
+* Fri Feb 17 2017 Lumir Balhar <lbalhar@redhat.com> - 0.8.0-1
+- New upstream release
+
 * Sat Feb 11 2017 Fedora Release Engineering <releng@fedoraproject.org> - 0.7.4-7.git772df64
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_26_Mass_Rebuild
 
