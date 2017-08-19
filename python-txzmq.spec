@@ -12,7 +12,7 @@
 
 Name:             python-txzmq
 Version:          0.8.0
-Release:          2%{?dist}
+Release:          3%{?dist}
 Summary:          Twisted bindings for ZeroMQ
 
 Group:            Development/Languages
@@ -29,10 +29,6 @@ BuildRequires:    python2-zmq >= 13.0.0
 BuildRequires:    python-twisted-core
 BuildRequires:    python2-six
 
-Requires:         python2-zmq >= 13.0.0
-Requires:         python-twisted-core
-Requires:         python2-six
-
 %if 0%{?with_python3}
 BuildRequires:    python3-devel
 BuildRequires:    python3-setuptools
@@ -42,9 +38,20 @@ BuildRequires:    python3-twisted
 BuildRequires:    python3-six
 %endif
 
-%description
-txZMQ allows to integrate easily ZeroMQ sockets into Twisted event loop
+%global _description\
+txZMQ allows to integrate easily ZeroMQ sockets into Twisted event loop\
 (reactor).
+
+%description %_description
+
+%package -n python2-txzmq
+Summary: %summary
+Requires:         python2-zmq >= 13.0.0
+Requires:         python-twisted-core
+Requires:         python2-six
+%{?python_provide:%python_provide python2-txzmq}
+
+%description -n python2-txzmq %_description
 
 %if 0%{?with_python3}
 %package -n python3-txzmq
@@ -98,7 +105,7 @@ popd
 %py3_install
 %endif
 
-%files
+%files -n python2-txzmq
 %doc README.rst
 %license LICENSE.txt
 %{python2_sitelib}/txzmq/
@@ -113,6 +120,10 @@ popd
 %endif
 
 %changelog
+* Sat Aug 19 2017 Zbigniew Jędrzejewski-Szmek <zbyszek@in.waw.pl> - 0.8.0-3
+- Python 2 binary package renamed to python2-txzmq
+  See https://fedoraproject.org/wiki/FinalizingFedoraSwitchtoPython3
+
 * Thu Jul 27 2017 Fedora Release Engineering <releng@fedoraproject.org> - 0.8.0-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_27_Mass_Rebuild
 
