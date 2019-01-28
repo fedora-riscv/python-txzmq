@@ -15,7 +15,6 @@ Version:          0.8.0
 Release:          7%{?dist}
 Summary:          Twisted bindings for ZeroMQ
 
-Group:            Development/Languages
 License:          GPLv2
 URL:              https://github.com/smira/%{modname}
 Source0:          %{url}/archive/%{version}.tar.gz
@@ -56,7 +55,6 @@ Requires:         python2-six
 %if 0%{?with_python3}
 %package -n python3-txzmq
 Summary:          Twisted bindings for ZeroMQ
-Group:            Development/Languages
 
 Requires:         python3-zmq >= 13.0.0
 Requires:         python3-twisted
