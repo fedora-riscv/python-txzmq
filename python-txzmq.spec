@@ -1,4 +1,4 @@
-%if 0%{?fedora}
+%if 0%{?fedora} || 0%{?rhel} >= 8
 %global with_python3 1
 %endif
 
@@ -88,7 +88,7 @@ cp -a . %{py3dir}
 %endif
 
 %check
-PYTHONPATH=$(pwd) nosetests
+PYTHONPATH=$(pwd) nosetests-%{python2_version}
 
 %if 0%{?with_python3}
 pushd %{py3dir}
