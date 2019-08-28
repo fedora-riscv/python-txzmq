@@ -1,18 +1,8 @@
-%if 0%{?fedora} || 0%{?rhel} >= 8
-%global with_python3 1
-%endif
-
-%if 0%{?rhel} && 0%{?rhel} <= 6
-%{!?__python2:        %global __python2 /usr/bin/python2}
-%{!?python2_sitelib:  %global python2_sitelib %(%{__python2} -c "from distutils.sysconfig import get_python_lib; print(get_python_lib())")}
-%{!?python2_sitearch: %global python2_sitearch %(%{__python2} -c "from distutils.sysconfig import get_python_lib; print(get_python_lib(1))")}
-%endif
-
 %global modname txZMQ
 
 Name:             python-txzmq
 Version:          0.8.0
-Release:          10%{?dist}
+Release:          11%{?dist}
 Summary:          Twisted bindings for ZeroMQ
 
 License:          GPLv2
@@ -21,21 +11,12 @@ Source0:          %{url}/archive/%{version}.tar.gz
 
 BuildArch:        noarch
 
-BuildRequires:    python2-devel
-BuildRequires:    python2-setuptools
-BuildRequires:    python2-nose
-BuildRequires:    python2-zmq >= 13.0.0
-BuildRequires:    python2-twisted
-BuildRequires:    python2-six
-
-%if 0%{?with_python3}
 BuildRequires:    python3-devel
 BuildRequires:    python3-setuptools
 BuildRequires:    python3-nose
 BuildRequires:    python3-zmq >= 13.0.0
 BuildRequires:    python3-twisted
 BuildRequires:    python3-six
-%endif
 
 %global _description\
 txZMQ allows to integrate easily ZeroMQ sockets into Twisted event loop\
@@ -43,16 +24,6 @@ txZMQ allows to integrate easily ZeroMQ sockets into Twisted event loop\
 
 %description %_description
 
-%package -n python2-txzmq
-Summary: %summary
-Requires:         python2-zmq >= 13.0.0
-Requires:         python2-twisted
-Requires:         python2-six
-%{?python_provide:%python_provide python2-txzmq}
-
-%description -n python2-txzmq %_description
-
-%if 0%{?with_python3}
 %package -n python3-txzmq
 Summary:          Twisted bindings for ZeroMQ
 
@@ -63,7 +34,6 @@ Requires:         python3-six
 %description -n python3-txzmq
 txZMQ allows to integrate easily ZeroMQ sockets into Twisted event loop
 (reactor).
-%endif
 
 
 %prep
@@ -75,49 +45,27 @@ txZMQ allows to integrate easily ZeroMQ sockets into Twisted event loop
 %{__sed} -i 's/"Twisted",//' setup.py
 %endif
 
-%if 0%{?with_python3}
-rm -rf %{py3dir}
-cp -a . %{py3dir}
-%endif
 
 %build
-%py2_build
-
-%if 0%{?with_python3}
 %py3_build
-%endif
 
 %check
-PYTHONPATH=$(pwd) nosetests-%{python2_version}
-
-%if 0%{?with_python3}
-pushd %{py3dir}
 PYTHONPATH=$(pwd) nosetests-%{python3_version}
-popd
-%endif
 
 %install
-%py2_install
-
-%if 0%{?with_python3}
 %py3_install
-%endif
 
-%files -n python2-txzmq
-%doc README.rst
-%license LICENSE.txt
-%{python2_sitelib}/txzmq/
-%{python2_sitelib}/txZMQ-%{version}*.egg-info
-
-%if 0%{?with_python3}
 %files -n python3-txzmq
 %doc README.rst
 %license LICENSE.txt
 %{python3_sitelib}/txzmq/
 %{python3_sitelib}/txZMQ-%{version}*.egg-info
-%endif
 
 %changelog
+* Wed Aug 28 2019 Miro Hrončok <mhroncok@redhat.com> - 0.8.0-11
+- Subpackage python2-txzmq has been removed
+  See https://fedoraproject.org/wiki/Changes/Mass_Python_2_Package_Removal
+
 * Sat Aug 17 2019 Miro Hrončok <mhroncok@redhat.com> - 0.8.0-10
 - Rebuilt for Python 3.8
 
