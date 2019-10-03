@@ -2,7 +2,7 @@
 
 Name:             python-txzmq
 Version:          0.8.0
-Release:          11%{?dist}
+Release:          12%{?dist}
 Summary:          Twisted bindings for ZeroMQ
 
 License:          GPLv2
@@ -62,6 +62,9 @@ PYTHONPATH=$(pwd) nosetests-%{python3_version}
 %{python3_sitelib}/txZMQ-%{version}*.egg-info
 
 %changelog
+* Thu Oct 03 2019 Miro Hrončok <mhroncok@redhat.com> - 0.8.0-12
+- Rebuilt for Python 3.8.0rc1 (#1748018)
+
 * Wed Aug 28 2019 Miro Hrončok <mhroncok@redhat.com> - 0.8.0-11
 - Subpackage python2-txzmq has been removed
   See https://fedoraproject.org/wiki/Changes/Mass_Python_2_Package_Removal
