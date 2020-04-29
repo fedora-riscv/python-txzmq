@@ -1,67 +1,77 @@
-%global modname txZMQ
+# what it's called on pypi
+%global srcname txZMQ
+# what it's imported as
+%global libname txzmq
+# name of egg info directory
+%global eggname %{srcname}
+# package name fragment
+%global pkgname %{libname}
 
-Name:             python-txzmq
-Version:          0.8.0
-Release:          13%{?dist}
-Summary:          Twisted bindings for ZeroMQ
-
-License:          GPLv2
-URL:              https://github.com/smira/%{modname}
-Source0:          %{url}/archive/%{version}.tar.gz
-
-BuildArch:        noarch
-
-BuildRequires:    python3-devel
-BuildRequires:    python3-setuptools
-BuildRequires:    python3-nose
-BuildRequires:    python3-zmq >= 13.0.0
-BuildRequires:    python3-twisted
-BuildRequires:    python3-six
-
-%global _description\
-txZMQ allows to integrate easily ZeroMQ sockets into Twisted event loop\
-(reactor).
-
-%description %_description
-
-%package -n python3-txzmq
-Summary:          Twisted bindings for ZeroMQ
-
-Requires:         python3-zmq >= 13.0.0
-Requires:         python3-twisted
-Requires:         python3-six
-
-%description -n python3-txzmq
+%global common_description %{expand:
 txZMQ allows to integrate easily ZeroMQ sockets into Twisted event loop
-(reactor).
+(reactor).}
+
+%bcond_without  tests
+
+
+Name:           python-%{pkgname}
+Version:        0.8.2
+Release:        1%{?dist}
+Summary:        Twisted bindings for ZeroMQ
+License:        GPLv2
+URL:            https://github.com/smira/txZMQ
+Source0:        %pypi_source
+# https://github.com/smira/txZMQ/pull/85
+Patch0:         switch-to-setuptools.patch
+BuildArch:      noarch
+
+
+%description %{common_description}
+
+
+%package -n python3-%{pkgname}
+Summary:        %{summary}
+BuildRequires:  python3-devel
+BuildRequires:  %{py3_dist setuptools}
+%if %{with tests}
+BuildRequires:  %{py3_dist nose pyzmq zope.interface twisted}
+%endif
+%{?python_provide:%python_provide python3-%{pkgname}}
+
+
+%description -n python3-%{pkgname} %{common_description}
 
 
 %prep
-%setup -q -n %{modname}-%{version}
-
-# Patch out the setuptools requirement on Twisted since epel doesn't ship
-# twisted egg-info
-%if 0%{?rhel}
-%{__sed} -i 's/"Twisted",//' setup.py
-%endif
+%autosetup -n %{srcname}-%{version} -p 1
+rm -rf %{eggname}.egg-info
 
 
 %build
 %py3_build
 
-%check
-PYTHONPATH=$(pwd) nosetests-%{python3_version}
 
 %install
 %py3_install
 
-%files -n python3-txzmq
+
+%check
+%if %{with tests}
+PYTHONPATH=%{buildroot}%{python3_sitelib} nosetests-%{python3_version}
+%endif
+
+
+%files -n python3-%{pkgname}
 %doc README.rst
 %license LICENSE.txt
-%{python3_sitelib}/txzmq/
-%{python3_sitelib}/txZMQ-%{version}*.egg-info
+%{python3_sitelib}/%{libname}
+%{python3_sitelib}/%{eggname}-%{version}-py%{python3_version}.egg-info
+
 
 %changelog
+* Tue Apr 28 2020 Carl George <carl@george.computer> - 0.8.2-1
+- Latest upstream rhbz#1772197
+
 * Thu Jan 30 2020 Fedora Release Engineering <releng@fedoraproject.org> - 0.8.0-13
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_32_Mass_Rebuild
 
