@@ -15,14 +15,12 @@ txZMQ allows to integrate easily ZeroMQ sockets into Twisted event loop
 
 
 Name:           python-%{pkgname}
-Version:        0.8.2
-Release:        6%{?dist}
+Version:        1.0.0
+Release:        1%{?dist}
 Summary:        Twisted bindings for ZeroMQ
-License:        GPLv2
+License:        MPLv2.0
 URL:            https://github.com/smira/txZMQ
 Source0:        %pypi_source
-# https://github.com/smira/txZMQ/pull/85
-Patch0:         switch-to-setuptools.patch
 BuildArch:      noarch
 
 
@@ -34,9 +32,8 @@ Summary:        %{summary}
 BuildRequires:  python3-devel
 BuildRequires:  %{py3_dist setuptools}
 %if %{with tests}
-BuildRequires:  %{py3_dist nose pyzmq zope.interface twisted}
+BuildRequires:  %{py3_dist twisted pyzmq}
 %endif
-%{?python_provide:%python_provide python3-%{pkgname}}
 
 
 %description -n python3-%{pkgname} %{common_description}
@@ -57,7 +54,7 @@ rm -rf %{eggname}.egg-info
 
 %check
 %if %{with tests}
-PYTHONPATH=%{buildroot}%{python3_sitelib} nosetests-%{python3_version}
+PYTHONPATH=%{buildroot}%{python3_sitelib} trial-%{python3_version} txzmq
 %endif
 
 
@@ -69,6 +66,10 @@ PYTHONPATH=%{buildroot}%{python3_sitelib} nosetests-%{python3_version}
 
 
 %changelog
+* Wed Sep 15 2021 Carl George <carl@george.computer> - 1.0.0-1
+- Latest upstream
+- Resolves: rhbz#2004574
+
 * Tue Jul 27 2021 Fedora Release Engineering <releng@fedoraproject.org> - 0.8.2-6
 - Second attempt - Rebuilt for
   https://fedoraproject.org/wiki/Fedora_35_Mass_Rebuild
