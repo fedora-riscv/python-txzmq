@@ -16,7 +16,7 @@ txZMQ allows to integrate easily ZeroMQ sockets into Twisted event loop
 
 Name:           python-%{pkgname}
 Version:        1.0.0
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Twisted bindings for ZeroMQ
 License:        MPLv2.0
 URL:            https://github.com/smira/txZMQ
@@ -66,6 +66,9 @@ PYTHONPATH=%{buildroot}%{python3_sitelib} trial-%{python3_version} txzmq
 
 
 %changelog
+* Fri Jul 22 2022 Fedora Release Engineering <releng@fedoraproject.org> - 1.0.0-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_37_Mass_Rebuild
+
 * Tue Jun 14 2022 Python Maint <python-maint@redhat.com> - 1.0.0-3
 - Rebuilt for Python 3.11
 
