@@ -54,7 +54,7 @@ rm -rf %{eggname}.egg-info
 
 %check
 %if %{with tests}
-PYTHONPATH=%{buildroot}%{python3_sitelib} trial-%{python3_version} txzmq
+PYTHONPATH=%{buildroot}%{python3_sitelib} trial-3 txzmq
 %endif
 
 
